@@ -1,6 +1,49 @@
-venv/
-.env
-.DS_Store
+
+# Python
 __pycache__/
-*.pyc
-*.log
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+venv/
+.venv/
+env/
+
+# Environment variables and credentials
+.env
+.env.*
+!.env.example
+.soc_token
+*.pem
+*.key
+secrets/
+
+# Runtime data and private monitoring records
+logs/
+incident-reports/
+*.db
+*.sqlite
+*.sqlite3
+sent_alert_state.json
+
+# Operating system
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+
+# IDE and editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Testing and coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Build files
+build/
+dist/
+*.egg-info/

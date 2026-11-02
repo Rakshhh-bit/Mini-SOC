@@ -1,0 +1,282 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mini SOC | Security Operations Center</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+<div class="app-shell">
+
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand-mark">M</div>
+            <div>
+                <h2>MINI SOC</h2>
+                <span>SECURITY OPERATIONS</span>
+            </div>
+        </div>
+
+        <div class="nav-label">WORKSPACE</div>
+
+        <nav class="navigation">
+            <a href="#overview" class="nav-item active">▦ &nbsp; Overview</a>
+            <a href="#performance" class="nav-item">▥ &nbsp; Performance</a>
+            <a href="#endpoints" class="nav-item">▣ &nbsp; Endpoints</a>
+            <a href="#network" class="nav-item">⌘ &nbsp; Network Security</a>
+            <a href="#alerts" class="nav-item">⚑ &nbsp; Security Alerts</a>
+            <a href="#incidents" class="nav-item">▤ &nbsp; Incidents</a>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <div class="server-status">
+                <span class="status-indicator"></span>
+                <div>
+                    <strong>Central Server</strong>
+                    <small>Connected</small>
+                </div>
+            </div>
+            <div class="sidebar-footer">MINI SOC v1.0.0</div>
+        </div>
+    </aside>
+
+    <main class="main-content">
+
+        <header class="topbar">
+            <div>
+                <div class="breadcrumb">Workspace / Security Operations</div>
+                <h1>Security Operations Center</h1>
+                <p class="page-subtitle">Endpoint performance, network security and threat monitoring</p>
+            </div>
+
+            <div class="topbar-actions">
+                <div class="live-indicator"><span></span> LIVE MONITORING</div>
+                <button class="refresh-button" id="refresh-button" onclick="loadDashboard()">↻ Refresh</button>
+            </div>
+        </header>
+
+        <section class="content-area" id="overview">
+
+            <div class="section-heading">
+                <div>
+                    <h2>Security Overview</h2>
+                    <p>Centralized monitoring across connected endpoints</p>
+                </div>
+                <span class="updated-label">Last updated: <span id="last-updated">—</span></span>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-top">Monitored Endpoints <span class="stat-icon blue">▣</span></div>
+                    <div class="stat-value" id="endpoint-count">—</div>
+                    <div class="stat-description">Reporting devices</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-top">Telemetry Records <span class="stat-icon purple">⌁</span></div>
+                    <div class="stat-value" id="telemetry-count">—</div>
+                    <div class="stat-description">System reports received</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-top">Security Alerts <span class="stat-icon orange">⚑</span></div>
+                    <div class="stat-value" id="alert-count">—</div>
+                    <div class="stat-description">Recorded detections</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-top">Incidents <span class="stat-icon red">▤</span></div>
+                    <div class="stat-value" id="incident-count">—</div>
+                    <div class="stat-description">Tracked security incidents</div>
+                </div>
+            </div>
+
+            <!-- PERFORMANCE CHARTS -->
+            <section id="performance">
+                <div class="section-heading chart-heading">
+                    <div>
+                        <h2>Endpoint Performance Analytics</h2>
+                        <p>Actual CPU, memory and disk utilization collected from your MacBook</p>
+                    </div>
+                    <span class="panel-tag">SYSTEM TELEMETRY</span>
+                </div>
+
+                <div class="chart-grid">
+                    <div class="chart-card chart-wide">
+                        <div class="chart-card-header">
+                            <div>
+                                <h3>System Resource Utilization</h3>
+                                <p>Historical resource usage</p>
+                            </div>
+                            <span class="chart-live">● TELEMETRY</span>
+                        </div>
+                        <div class="chart-container large-chart">
+                            <canvas id="resource-chart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <div class="chart-card-header">
+                            <div>
+                                <h3>Latest Endpoint Metrics</h3>
+                                <p>Current reported utilization</p>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="performance-chart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <div class="chart-card-header">
+                            <div>
+                                <h3>Alert Severity Distribution</h3>
+                                <p>Distribution of recorded alerts</p>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="severity-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ENDPOINTS -->
+            <section class="panel" id="endpoints">
+                <div class="panel-header">
+                    <div>
+                        <h2>Monitored Endpoints</h2>
+                        <p>Latest endpoint system telemetry</p>
+                    </div>
+                    <span class="panel-tag">ENDPOINT INVENTORY</span>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>HOSTNAME</th>
+                                <th>OPERATING SYSTEM</th>
+                                <th>CPU</th>
+                                <th>MEMORY</th>
+                                <th>DISK</th>
+                                <th>LAST REPORT</th>
+                            </tr>
+                        </thead>
+                        <tbody id="endpoint-table">
+                            <tr><td colspan="6" class="empty-state">Waiting for telemetry...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- NETWORK -->
+            <section class="panel" id="network">
+                <div class="panel-header">
+                    <div>
+                        <h2>Network Security Monitoring</h2>
+                        <p>Network-related detections from monitored endpoints</p>
+                    </div>
+                    <span class="panel-tag">NETWORK MONITORING</span>
+                </div>
+
+                <div class="network-summary">
+                    <div class="network-metric">
+                        <span>Network Alerts</span>
+                        <strong id="network-alert-count">0</strong>
+                    </div>
+                    <div class="network-metric">
+                        <span>Listening Port Detections</span>
+                        <strong id="listening-alert-count">0</strong>
+                    </div>
+                    <div class="network-metric">
+                        <span>Dual-use Tool Detections</span>
+                        <strong id="tool-alert-count">0</strong>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ENDPOINT</th>
+                                <th>RULE ID</th>
+                                <th>DETECTION</th>
+                                <th>SEVERITY</th>
+                                <th>DETECTED AT</th>
+                            </tr>
+                        </thead>
+                        <tbody id="network-table">
+                            <tr><td colspan="5" class="empty-state">No network alerts received.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- SECURITY ALERTS -->
+            <section class="panel" id="alerts">
+                <div class="panel-header">
+                    <div>
+                        <h2>Security Alerts</h2>
+                        <p>Threat detection events and MITRE ATT&CK classification</p>
+                    </div>
+                    <span class="panel-tag">DETECTION LOG</span>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ENDPOINT</th>
+                                <th>RULE ID</th>
+                                <th>ALERT</th>
+                                <th>SEVERITY</th>
+                                <th>MITRE TACTIC</th>
+                                <th>TECHNIQUE</th>
+                                <th>CONFIDENCE</th>
+                                <th>DETECTED</th>
+                            </tr>
+                        </thead>
+                        <tbody id="alert-table">
+                            <tr><td colspan="8" class="empty-state">No alerts available.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- INCIDENTS -->
+            <section class="panel" id="incidents">
+                <div class="panel-header">
+                    <div>
+                        <h2>Incident Management</h2>
+                        <p>Review incidents and manage response status</p>
+                    </div>
+                    <span class="panel-tag">RESPONSE WORKFLOW</span>
+                </div>
+
+                <div id="activity-list" class="incident-container">
+                    <div class="empty-state">No incidents available.</div>
+                </div>
+            </section>
+
+            <footer class="main-footer">
+                <span>Mini SOC Security Operations Platform</span>
+                <span>Central Monitoring Interface · v1.0.0</span>
+            </footer>
+
+        </section>
+    </main>
+</div>
+
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+</body>
+</html>
